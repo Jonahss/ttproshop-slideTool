@@ -55,12 +55,28 @@ var processSlide = function(query, req, res){
 		});
 	};
 	
+	var extend_image = function(callback){
+		//target size is 930x120
+		//170px blank space on left side
+		im.convert(['resizedImage.'+extension, '-background', 'none', '-gravity', 'west', '-extent', '760x120', 'extendedImage.'+extension], function(){
+			im.convert(['extendedImage.'+extension, '-background', 'none', '-gravity', 'east', '-extent', '930x120', 'extendedImage.'+extension], callback)
+		});
+	};
+	
+	var add_text = function(txt, callback){
+		im.convert([], callback);
+	}
 	
 	save_image(query.url, function(){
 		console.log('imaged saved locally as .'+extension);
 		resize_image(function(){
 			console.log('image resized locally');
-			
+			extend_image(function(){
+				console.log('image extended');
+				add_text(query.text, function(){
+					console.log('text added');
+				})
+			});
 		});
 	});
 	
