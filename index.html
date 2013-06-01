@@ -11,7 +11,16 @@
     $('#submit').click(function(e){
 	
 		$.ajax('/submit', {
-			data: {url: $('#image').val(), text: $('#text').val()}
+			data: {url: $('#image').val(), text: $('#text').val()},
+			success: function(data){
+				var img = new Image();
+				img.onload = function(){
+					$('body').append(this);
+				}
+				console.log(data);
+				img.src = "/image?extension="+data;
+				
+			}
 		});
 	
 	});
@@ -26,6 +35,7 @@
 <input type="text" id="image"/>
 <input type="text" id="text"/>
 <input type="submit" id="submit" />
+<canvas id='canvas'>
 
 
 </body>

@@ -15,6 +15,12 @@ server.on('request', function(request, response){
 		case '/submit':
 			processSlide(u.query, request, response);
 			break;
+		case '/image':
+			var extension = u.query.extension.split('.').pop();
+			var img = fs.readFileSync('annotatedImage.'+extension);
+			response.writeHead(200, {'Content-Type': 'image/'+extension });
+			response.end(img, 'binary');
+			break;
 		default:
 			fs.readFile('index.html', function(err, data){
 				response.end(err || data);
@@ -64,7 +70,7 @@ var processSlide = function(query, req, res){
 	};
 	
 	var add_text = function(txt, callback){
-		im.convert([], callback);
+		im.convert(['-font', 'Candice', '-pointsize', '72', '-fill', 'turquoise', 'extendedImage.'+extension, '-gravity', 'west', '-annotate', '+350+0', txt, 'annotatedImage.'+extension], callback);
 	}
 	
 	save_image(query.url, function(){
@@ -73,8 +79,21 @@ var processSlide = function(query, req, res){
 			console.log('image resized locally');
 			extend_image(function(){
 				console.log('image extended');
-				add_text(query.text, function(){
-					console.log('text added');
+				add_text(query.text, function(e){
+					console.log('text added',e);
+					var stat = fs.statSync('annotatedImage.'+extension);
+
+					/*
+					res.writeHead(200, {
+						'Content-Type': 'image/'+extension,
+						'Content-Length': stat.size
+					});
+					//res.write("data:image/"+extension+";base64,");
+					var readStream = fs.createReadStream('annotatedImage.'+extension);
+					readStream.pipe(res)
+					*/
+					res.end(extension);
+					console.log('sending finished');
 				})
 			});
 		});
