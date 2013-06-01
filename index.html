@@ -1,0 +1,34 @@
+<html>
+
+
+<body>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript">
+  $(function(){
+  
+    $('#submit').click(function(e){
+	
+		$.ajax('/submit', {
+			data: {url: $('#image').val(), text: $('#text').val()}
+		});
+	
+	});
+  
+  
+  
+  });
+</script>
+
+<h3>Slide Tool</h3>
+
+<input type="text" id="image"/>
+<input type="text" id="text"/>
+<input type="submit" id="submit" />
+
+
+</body>
+
+
+</html>
